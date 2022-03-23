@@ -9,12 +9,12 @@ from flask import Blueprint, abort, jsonify, request
 import bioregistry
 
 from .utils import (
-    _autocomplete,
     _get_identifier,
     _normalize_prefix_or_404,
     _search,
     serialize,
 )
+from ..autocomplete import autocomplete_omni
 from .. import normalize_prefix
 from ..export.prefix_maps import collection_to_context_jsonlds
 from ..export.rdf_export import (
@@ -378,7 +378,7 @@ def autocomplete():
     q = request.args.get("q")
     if q is None:
         abort(400)
-    return jsonify(_autocomplete(q))
+    return jsonify(autocomplete_omni(q).dict())
 
 
 @api_blueprint.route("/context.jsonld")
