@@ -7,6 +7,7 @@ import logging
 import pathlib
 import re
 import textwrap
+import warnings
 from functools import lru_cache
 from typing import (
     Any,
@@ -873,19 +874,24 @@ class Resource(BaseModel):
         """
         return self.get_external("prefixcommons").get(URI_FORMAT_KEY)
 
-    def get_identifiers_org_prefix(self) -> Optional[str]:
-        """Get the identifiers.org prefix if available.
+    def get_miriam_prefix(self):
+        """Get the MIRIAM/Identifiers.org prefix if available.
 
-        :returns: The Identifiers.org/MIRIAM prefix corresponding to the prefix, if mappable.
+        :returns: The MIRIAM/Identifiers.org prefix corresponding to the prefix, if mappable.
 
         >>> from bioregistry import get_resource
-        >>> get_resource('chebi').get_identifiers_org_prefix()
+        >>> get_resource('chebi').get_miriam_prefix()
         'chebi'
-        >>> get_resource('ncbitaxon').get_identifiers_org_prefix()
+        >>> get_resource('ncbitaxon').get_miriam_prefix()
         'taxonomy'
-        >>> assert get_resource('MONDO').get_identifiers_org_prefix() is None
+        >>> assert get_resource('MONDO').get_miriam_prefix() is None
         """
         return self.get_mapped_prefix("miriam")
+
+    def get_identifiers_org_prefix(self) -> Optional[str]:
+        """Get the MIRIAM/Identifiers.org prefix if available."""
+        warnings.warn("use get_miriam_prefix() instead", DeprecationWarning)
+        return self.get_miriam_prefix()
 
     def get_miriam_uri_prefix(self) -> Optional[str]:
         """Get the Identifiers.org URI prefix for this entry, if possible.
@@ -899,7 +905,7 @@ class Resource(BaseModel):
         'https://identifiers.org/GO:'
         >>> assert get_resource('sty').get_miriam_uri_prefix() is None
         """
-        miriam_prefix = self.get_identifiers_org_prefix()
+        miriam_prefix = self.get_miriam_prefix()
         if miriam_prefix is None:
             return None
         if self.get_namespace_in_lui():
