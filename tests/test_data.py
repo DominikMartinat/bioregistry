@@ -331,7 +331,8 @@ class TestRegistry(unittest.TestCase):
         """Assert the identifier is canonical."""
         entry = self.registry[prefix]
         canonical = entry.is_canonical_identifier(example)
-        self.assertTrue(canonical is None or canonical, msg=f"Failed on prefix={prefix}: {example}")
+        link = f". Check also the default URI {entry.get_default_uri(example)}" if entry.get_default_format() else ""
+        self.assertTrue(canonical is None or canonical, msg=f"Failed on prefix={prefix}: {example}{link}")
 
     def test_extra_examples(self):
         """Test extra examples."""
