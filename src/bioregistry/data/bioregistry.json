@@ -42580,6 +42580,22 @@
     },
     "pattern": "^\\d{7}$"
   },
+  "noncode.gene": {
+    "description": "An integrated knowledge database dedicated to ncRNAs, especially lncRNAs.",
+    "homepage": "http://www.noncode.org/",
+    "name": "NONCODE"
+  },
+  "noncode.rna": {
+    "description": "An integrated knowledge database dedicated to ncRNAs, especially lncRNAs.",
+    "example": "NONATHT000001",
+    "example_extras": [
+      "NONATHT000001.1"
+    ],
+    "homepage": "http://www.noncode.org/",
+    "name": "NONCODE",
+    "pattern": "^NONHSAG\\d+(\\.\\d+)?$",
+    "uri_format": "www.noncode.org/show_rna.php?id=$1"
+  },
   "noncodev3": {
     "biocontext": {
       "is_identifiers": true,
