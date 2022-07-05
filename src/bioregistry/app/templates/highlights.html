@@ -1,0 +1,57 @@
+{% extends "prose.html" %}
+
+{% block title %}Bioregistry Highlights{% endblock %}
+
+
+{% block content %}
+    <h2>Deprecated Resources</h2>
+    <p>
+        There are {{ deprecated|length }} deprecated resources.
+    </p>
+    <table class="table table-striped table-hover">
+        {% for resource in deprecated %}
+            <tr>
+                <td>
+                    <a href="{{ url_for("ui.resource", prefix=resource.prefix) }}">
+                        <code>{{ resource.prefix }}</code>
+                    </a>
+                </td>
+                <td>{{ resource.get_name() }}</td>
+                <td>{{ resource.comment or "" }}</td>
+                <td>
+                    {% for prefix in manager.get_appears_in(resource.prefix) %}
+                        {% set appers_resource = manager.get_resource(prefix) %}
+                        <a href="{{ url_for("ui.resource", prefix=appers_resource.prefix) }}">
+                            <code>{{ appers_resource.prefix }}</code>
+                        </a>
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <h2>Proprietary Resources</h2>
+    <p>
+        There are {{ proprietary|length }} deprecated resources.
+    </p>
+    <table class="table table-striped table-hover">
+        {% for resource in proprietary %}
+            <tr>
+                <td>
+                    <a href="{{ url_for("ui.resource", prefix=resource.prefix) }}">
+                        <code>{{ resource.prefix }}</code>
+                    </a>
+                </td>
+                <td>{{ resource.get_name() }}</td>
+                <td>{{ resource.comment or "" }}</td>
+                <td>
+                    {% for prefix in manager.get_appears_in(resource.prefix) %}
+                        {% set appers_resource = manager.get_resource(prefix) %}
+                        <a href="{{ url_for("ui.resource", prefix=appers_resource.prefix) }}">
+                            <code>{{ appers_resource.prefix }}</code>
+                        </a>
+                    {% endfor %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

@@ -9,7 +9,7 @@ from operator import attrgetter
 from flasgger import Swagger
 from flask import Flask, jsonify, render_template
 from flask_bootstrap import Bootstrap4
-
+from collections import defaultdict
 import bioregistry
 from bioregistry import version
 from bioregistry.constants import NDEX_UUID
@@ -25,6 +25,7 @@ from ..schema.struct import (
     get_json_schema,
     schema_status_map,
 )
+from bioregistry import manager
 
 app = Flask(__name__)
 Swagger.DEFAULT_CONFIG.update(
@@ -60,7 +61,7 @@ app.register_blueprint(api_blueprint)
 app.register_blueprint(ui_blueprint)
 
 # Make bioregistry available in all jinja templates
-app.jinja_env.globals.update(bioregistry=bioregistry)
+app.jinja_env.globals.update(bioregistry=bioregistry, manager=manager)
 
 
 @app.route("/")
@@ -105,6 +106,22 @@ def download():
     """Render the download page."""
     return render_template("meta/download.html", ndex_uuid=NDEX_UUID)
 
+
+@app.route("/highlights")
+def highlights():
+    """Render the highlighs page."""
+    has_twitter = defaultdict(list)
+    deprecated = []
+    proprietary = []
+    for resource in manager.registry.values():
+        twitter = resource.get_twitter()
+        if twitter:
+            has_twitter[twitter].append(resource)
+        if resource.is_deprecated():
+            deprecated.append(resource)
+        if resource.proprietary:
+            proprietary.append(resource)
+    return render_template("highlights.html", has_twitter=has_twitter, deprecated=deprecated, proprietary=proprietary)
 
 @app.route("/acknowledgements")
 def acknowledgements():

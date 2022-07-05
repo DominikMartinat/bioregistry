@@ -47,8 +47,8 @@ class BioregistrySummary:
         The Bioregistry ({get_version()}; {self.datetime_str}) integrates content from and aligns
         {self.number_registries_aligned:,} external registries and contains {self.number_prefixes:,}
         individual records. These records extend on each prior registry
-        (e.g., 838 records in {self.external_sizes['prefixcommons']}, {self.external_sizes['miriam']:,}
-        in MIRIAM/Identifiers.org, and {self.external_sizes['n2t']:,}  in Name-to-Thing (Wimalaratne et al., 2018),
+        (e.g., {self.external_sizes['prefixcommons']:,} records in Prefix Commons, {self.external_sizes['miriam']:,}
+        in MIRIAM/Identifiers.org, and {self.external_sizes['n2t']:,} in Name-to-Thing (Wimalaratne et al., 2018),
         each accessed on {self.datetime_str}), as well as the aligned registries combined:
         {self.number_prefixes_novel:,} of the Bioregistry’s {self.number_prefixes:,} records are novel,
         i.e. they do not appear in any existing registry. The Bioregistry also adds novel curated metadata
@@ -115,8 +115,8 @@ class BioregistrySummary:
         novel_prefixes = {prefix for prefix, entry in registry.items() if not entry.mappings}
         number_novel_prefixes = len(novel_prefixes)
 
-        metaprefixes = set(bioregistry.read_metaregistry())
-        metaprefixes_aligned = set(metaprefix_to_mapping_count)
+        metaprefixes = set(bioregistry.read_metaregistry()) - {"bioregistry"}
+        metaprefixes_aligned = set(metaprefix_to_mapping_count) - {"bioregistry"}
 
         #: The number of prefixes that have any overrides that are not novel to the Bioregistry
         prefixes_curated = sum(
